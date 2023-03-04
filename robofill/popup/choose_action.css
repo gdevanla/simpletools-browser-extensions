@@ -1,0 +1,59 @@
+html,
+body {
+  width: 480px;
+  background-color: whitesmoke;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  border: none;
+  margin: 3% auto;
+  padding: 4px;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+label {
+  border: none;
+  width: 50%;
+  align: left;
+  margin: 3% auto;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+#.info-quote {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  font-size: 40px;
+  color: #ffffff;
+}
+
+select {
+  border: none;
+  width: 50%;
+  margin: 3% auto;
+  padding: 2px;
+  text-align: left;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+
+
+button:hover {
+  background-color: #CFF2F2;
+}
+
+button[type="reset"] {
+  background-color: #FBFBC9;
+}
+
+button[type="reset"]:hover {
+  background-color: #EAEA9D;
+}

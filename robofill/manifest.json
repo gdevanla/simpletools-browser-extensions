@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "RoboFill",
+  "version": "1.0",
+
+  "description": "TODO",
+    "homepage_url": "https://github.com/gdevanla/simpletools-browser-extensions/robofill",
+  "icons": {
+      "48": "icons/beasts-48.png"
+  },
+
+  "permissions": [
+      "activeTab",
+      "storage",
+      "tabs",
+      "notifications",
+      "scripting"
+
+  ],
+
+ "content_scripts": [
+     {
+     "matches" : ["<all_urls>"],
+     "js": ["content_scripts/content_robofill.js"],
+     "run_at": "document_end",
+     "all_frames": true
+   }
+ ],
+
+  "background": {
+      "service_worker": "background_scripts/background.js"
+  },
+
+  "action": {
+    "default_icon": "icons/beasts-48.png",
+    "default_title": "RoboFill",
+    "default_popup": "popup/choose_action.html"
+  },
+
+  "web_accessible_resources": [
+  ]
+}
