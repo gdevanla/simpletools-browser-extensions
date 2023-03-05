@@ -1,3 +1,5 @@
+![logo1.png](robofill/128.png)
+
 # robofill
 
 A chrome browser extension that helps you save the work you put in typing values into a form/page and then replay those values onto the same form. This is beneficial for repetitive tasks where the web pages don't give you any ability to reuse the values you typed in.
