@@ -6,7 +6,7 @@
   "description": "TODO",
     "homepage_url": "https://github.com/gdevanla/simpletools-browser-extensions/robofill",
   "icons": {
-      "48": "icons/beasts-48.png"
+      "48": "icons/logo1.png"
   },
 
   "permissions": [
@@ -32,11 +32,16 @@
   },
 
   "action": {
-    "default_icon": "icons/beasts-48.png",
+    "default_icon": "icons/logo1.png",
     "default_title": "RoboFill",
     "default_popup": "popup/choose_action.html"
   },
 
-  "web_accessible_resources": [
+
+    "web_accessible_resources": [
+        {
+        "resources": ["icons/logo1.png"],
+        "matches": ["<all_urls>"]
+    }
   ]
 }

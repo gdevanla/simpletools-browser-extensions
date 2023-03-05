@@ -1,7 +1,8 @@
 html,
 body {
   width: 480px;
-  background-color: whitesmoke;
+  /* background-image: url('chrome-extension://__MSG_@@extension_id__/icons/logo1.png'); */
+  background-image: url('../icons/logo1.png');
 }
 
 .hidden {
@@ -27,9 +28,9 @@ label {
 
 #.info-quote {
   content: '';
-  position: absolute;
+  position: relative;
   bottom: 10px;
-  right: 20px;
+  right: 0px;
   font-size: 40px;
   color: #ffffff;
 }
@@ -43,8 +44,6 @@ select {
   font-size: 1em;
   cursor: pointer;
 }
-
-
 
 button:hover {
   background-color: #CFF2F2;
