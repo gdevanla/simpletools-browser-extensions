@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "RoboFill",
-  "version": "0.0.1",
+  "version": "0.0.0.1",
 
-    "description": "A chrome browser extension that helps you save the work you put in typing values into a form/page and then replay those values onto the same form. This is beneficial for repetitive tasks where the web pages don't give you any ability to reuse the values you typed in. For more information visit the home page at: https://github.com/gdevanla/simpletools-browser-extensions#readme",
+    "description": "The extension lets you save values from a form and replay thback the values by autofilling them.",
     "homepage_url": "https://github.com/gdevanla/simpletools-browser-extensions#readme",
   "icons": {
       "48": "icons/logo1.png"
