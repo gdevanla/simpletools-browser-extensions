@@ -38,45 +38,135 @@ function onError(error) {
     //     fillValues(beastURL);
     // }
 
-    function fillValues(profile_name) {
+    // function fillValues_old(profile_name) {
 
+    //     let frame_index = iframeIndex(window);
+    //     console.log('frame_index=' + frame_index);
+
+    //     let frame_str = '';
+    //     if (frame_index !== -1) {
+    //         frame_str = '_' + frame_index;
+    //     }
+
+    //     profile_name = profile_name + frame_str;
+
+    //     //var items = document.getElementsByTagName("*");
+
+    //     chrome.storage.local.get(profile_name).then((result) => {
+    //         console.log("promise full-filled");
+    //         console.log('Retrieved data for profile=' + profile_name);
+    //         let data = result[profile_name];
+    //         let all_labels = document.getElementsByTagName('label');
+    //         for (const key in data) {
+    //             let value_in_store = data[key];
+
+    //             // now discover element and attach value
+    //             // this is slow, need to move this out
+    //             let input_elements = [];
+    //             for (let i = 0; i < all_labels.length; i++) {
+    //                 let label_element = all_labels[i];
+    //                 if (label_element.htmlFor === key) {
+    //                     input_elements = [document.getElementById(label_element.htmlFor)];
+    //                     break;
+    //                 }
+    //                 else if (label_element.textContent.trim() === key) //label without htmlFor value
+    //                 {
+    //                     input_elements = [label_element.children[0]]; // only worry about one element now
+    //                     break;
+    //                 }
+    //             }
+    //             // we looked at all labels and if we still did not find the element, then we are storing a name
+    //             if (input_elements.length === 0) {
+    //                 input_elements = document.getElementsByName(key);
+    //             }
+
+    //             input_elements.forEach(function(element) {
+    //                 console.log(element);
+    //                 console.log(value_in_store);
+    //                 if (!element){
+    //                     return;
+    //                 }
+    //                 // this is cautionary
+    //                 if (element.type === 'file' || element.type === 'hidden') {
+    //                     return;
+    //                 }
+
+    //                 if (element.type === 'checkbox') {
+    //                     element.checked = value_in_store;
+    //                 } else if (element.type === 'radio') {
+    //                     if (element.value === value_in_store) {
+    //                         element.checked = true;
+    //                     }
+    //                 } else {
+    //                     element.value = value_in_store;
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
+
+    function fillValues(profile_name) {
         let frame_index = iframeIndex(window);
         console.log('frame_index=' + frame_index);
-
         let frame_str = '';
-        if (frame_index !== -1) {
-            frame_str = '_' + frame_index;
-        }
-
+        if (frame_index !== -1) {frame_str = '_' + frame_index;}
         profile_name = profile_name + frame_str;
 
-        var items = document.getElementsByTagName("*");
+        //var items = document.getElementsByTagName("*");
         chrome.storage.local.get(profile_name).then((result) => {
             console.log("promise full-filled");
-            let data = result[profile_name];
             console.log('Retrieved data for profile=' + profile_name);
-            for (const key in data) {
-                let elements = document.getElementsByName(key);
-                if (typeof elements == "undefined") {
+            let data = result[profile_name];
+
+            var items = document.querySelectorAll("input, select, textarea, iframe input, iframe select, iframe textarea");
+            let contentToStore = {};
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].type === 'file' || items[i].type === 'hidden') {
                     continue;
                 }
-                console.log("elements");
-                console.log(elements);
-                elements.forEach(function(element) {
-                    console.log(element);
-                    if (element.type === 'checkbox') {
-                        element.checked = data[key];
-                    } else if (element.type === 'radio') {
-                        if (element.value === data[key]) {
-                            element.checked = true;
-                        }
-                    } else {
-                        element.value = data[key];
+
+                let labels = items[i].labels;
+                let key = "";
+                if (labels !== "undefined" && labels.length > 0) {
+                    if (labels[0].htmlFor === "undefined" || labels[0].htmlFor === "") {
+                        key = labels[0].textContent.trim();
                     }
-                });
+                    else
+                    {
+                        key = labels[0].htmlFor;
+                    }
+
+                }
+                // last resort
+                if (key === "") {
+                    key = items[i].name;
+                }
+
+                if (! key in data) {
+                    continue; // new field which we don't know about
+                }
+
+                let all_labels = document.getElementsByTagName('label');
+                let value_in_store = data[key];
+                if (value_in_store === "undefined") {
+                    continue;
+                }
+
+                if (items[i].type === 'checkbox') {
+                    items[i].checked = value_in_store;
+                } else if (items[i].type === 'radio') {
+                    if (items[i].value === value_in_store) {
+                        items[i].checked = true;
+                    }
+                } else {
+                    items[i].value = value_in_store;
+                }
             }
         });
     }
+
+
+
 
     //https://stackoverflow.com/questions/26010355/is-there-a-way-to-uniquely-identify-an-iframe-that-the-content-script-runs-in-fo
     function iframeIndex(win) {
@@ -108,7 +198,6 @@ function onError(error) {
 
         let frame_index = iframeIndex(window);
         console.log('frame_index=' + frame_index);
-
         let frame_str = '';
         if (frame_index !== -1) {
             frame_str = '_' + frame_index;
@@ -133,7 +222,23 @@ function onError(error) {
                 } // radio buttons share same name
             }
 
-            contentToStore[items[i].name] = value;
+            let labels = items[i].labels;
+            let key = "";
+            if (labels !== "undefined" && labels.length > 0) {
+                if (labels[0].htmlFor === "undefined" || labels[0].htmlFor === "") {
+                    key = labels[0].textContent.trim();
+                }
+                else
+                {
+                    key = labels[0].htmlFor;
+                }
+
+            }
+            // last resort
+            if (key === "") {
+                key = items[i].name;
+            }
+            contentToStore[key] = value;
         }
         let rootContent = {
             [profile_name + frame_str]: contentToStore
