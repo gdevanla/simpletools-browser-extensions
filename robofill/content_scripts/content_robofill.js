@@ -162,8 +162,13 @@ function onError(error) {
                     if (items[i].tagName == 'SELECT') {
                         for (let j=0;j < items[i].childElementCount;j++) {
                             if (items[i].children[j].value == value_in_store) {
-                                items[i].children[j].selected = true;
-                                simulateClick(items[i].children[j]);
+                                try{
+                                    console.log('setting select values and simulate click');
+                                    console.log(key);
+                                    items[i].children[j].selected = true;
+                                    simulateClick(items[i].children[j]);
+                                }
+                                catch(err){console.log(err);}
                             }
                         }
 
@@ -175,13 +180,19 @@ function onError(error) {
 
     function simulateClick(item) {
         // https://stackoverflow.com/questions/49886729/simulate-a-human-click-and-select-on-dropdown-menu
+        try {
         item.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
         item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
         item.dispatchEvent(new PointerEvent('pointerup', {bubbles: true}));
         item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
         item.dispatchEvent(new MouseEvent('mouseout', {bubbles: true}));
         item.dispatchEvent(new MouseEvent('click', {bubbles: true}));
-        item.dispatchEvent(new Event('change', {bubbles: true}));
+            item.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
 
         return true;
     }
