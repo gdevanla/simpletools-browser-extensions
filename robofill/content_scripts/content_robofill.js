@@ -146,7 +146,6 @@ function onError(error) {
                     continue; // new field which we don't know about
                 }
 
-                let all_labels = document.getElementsByTagName('label');
                 let value_in_store = data[key];
                 if (value_in_store === "undefined") {
                     continue;
@@ -255,20 +254,54 @@ function onError(error) {
                 {
                     key = labels[0].htmlFor;
                 }
-
             }
             // last resort
             if (key === "") {
-                key = items[i].name;
+                // check parent
+                if (items[i].parentElement.tagName === 'LABEL') {
+                    key = items[i].parentElement.textContent.trim();
+                }
+                //key = items[i].name;
             }
-            contentToStore[key] = value;
+
+            if (key !== "") {
+                // only save if we succeeded finding a label. Saving anything else for generic fields is useless across pages
+                contentToStore[key] = value;
+            }
         }
         let rootContent = {
             [profile_name + frame_str]: contentToStore
         };
         console.log(rootContent);
         console.log("before save");
-        chrome.storage.local.set(rootContent);
+
+
+        chrome.storage.local.get(profile_name + frame_str).then((result) => {
+            let local_data = result[profile_name + frame_str];
+            console.log('state of local_data ==', local_data);
+            if (!local_data) {
+                console.log('just copying over stuff we built');
+                local_data = rootContent;
+            }
+            else
+            {
+                for (var key in rootContent[profile_name + frame_str]) {
+                    // transfer over the values and overwrite existing keys
+                    console.log('transferring over values for key=' + key);
+                    local_data[key] = rootContent[profile_name+frame_str][key];
+                    console.log('set up local_data for');
+                    console.log(local_data[key]);
+
+                }
+                console.log(local_data);
+                local_data = {[profile_name + frame_str]: local_data};
+                console.log('before leaving else=');
+                console.log(local_data);
+            }
+            console.log('final local data = ');
+            console.log(local_data[profile_name + frame_str]);
+            chrome.storage.local.set(local_data);
+        });
 
         console.log('Frame_index=', frame_index);
         console.log('Frames length=', window.parent.frames.length);
