@@ -160,9 +160,31 @@ function onError(error) {
                     }
                 } else {
                     items[i].value = value_in_store;
+                    if (items[i].tagName == 'SELECT') {
+                        for (let j=0;j < items[i].childElementCount;j++) {
+                            if (items[i].children[j].value == value_in_store) {
+                                items[i].children[j].selected = true;
+                                simulateClick(items[i].children[j]);
+                            }
+                        }
+
+                    }
                 }
             }
         });
+    }
+
+    function simulateClick(item) {
+        // https://stackoverflow.com/questions/49886729/simulate-a-human-click-and-select-on-dropdown-menu
+        item.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+        item.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+        item.dispatchEvent(new PointerEvent('pointerup', {bubbles: true}));
+        item.dispatchEvent(new MouseEvent('mouseup', {bubbles: true}));
+        item.dispatchEvent(new MouseEvent('mouseout', {bubbles: true}));
+        item.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+        item.dispatchEvent(new Event('change', {bubbles: true}));
+
+        return true;
     }
 
 
@@ -210,6 +232,7 @@ function onError(error) {
             if (items[i].type === 'file' || items[i].type === 'hidden') {
                 continue;
             }
+
             let value = items[i].value;
             if (items[i].type === 'checkbox') {
                 value = items[i].checked;
